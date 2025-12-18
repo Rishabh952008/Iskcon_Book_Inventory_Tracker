@@ -1,0 +1,83 @@
+import streamlit as st
+import gspread
+import pandas as pd
+from datetime import datetime
+from oauth2client.service_account import ServiceAccountCredentials
+
+# ---------- CONFIG ----------
+SHEET_NAME = "ISKCON_BOOK_INVENTORY"
+
+# ---------- AUTH ----------
+scope = [
+    "https://spreadsheets.google.com/feeds",
+    "https://www.googleapis.com/auth/drive"
+]
+
+creds = ServiceAccountCredentials.from_json_keyfile_name(
+    "credentials.json", scope
+)
+client = gspread.authorize(creds)
+
+sheet = client.open(SHEET_NAME)
+sales_sheet = sheet.worksheet("sales_log")
+books_sheet = sheet.worksheet("books_master")
+
+# ---------- LOAD BOOK DATA ----------
+books_df = pd.DataFrame(books_sheet.get_all_records())
+
+st.title("📚 ISKCON Book Distribution Tracker")
+
+devotee = st.text_input("Devotee Name")
+if devotee.strip()=="":
+    devotee="Anonymous"
+
+# ---------- BOOK SEARCH ----------
+# book_search = st.text_input("Type Book Name (eg: B, Bh, Bhag)")
+
+filtered_books = books_df["Book Name"].str.lower()
+
+# book_name = st.selectbox(
+#     "Select Book",
+#     filtered_books["Book Name"].unique()
+#     if not filtered_books.empty else []
+# )
+
+book_name = st.selectbox(
+    "Type Book Name",
+    options=filtered_books.unique(),
+    index=None,
+    placeholder="Start typing (B, Bh, Bha...)"
+)
+
+# ---------- LANGUAGE ----------
+language = st.selectbox(
+    "Language",
+    ["English", "Hindi", "Marathi", "Gujarati"]
+)
+
+# ---------- PRICE AUTO ----------
+price = None
+if book_name:
+    price_row = books_df[
+        (books_df["Book Name"] == book_name) &
+        (books_df["Language"] == language)
+    ]
+    if not price_row.empty:
+        price = price_row.iloc[0]["Price"]
+
+price = st.number_input("Price", value=price if price else 0)
+
+quantity = st.number_input("Quantity Sold", min_value=1, step=1)
+
+# ---------- SUBMIT ----------
+if st.button("Submit Sale"):
+    sales_sheet.append_row([
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        book_name,
+        language,
+        quantity,
+        price,
+        devotee
+    ])
+    st.success("✅ Sale recorded successfully")
+
