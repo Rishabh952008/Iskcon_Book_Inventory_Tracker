@@ -2,8 +2,7 @@ import streamlit as st
 import gspread
 import pandas as pd
 from datetime import datetime
-from oauth2client.service_account import ServiceAccountCredentials
-
+from google.oauth2.service_account import Credentials
 # ---------- CONFIG ----------
 SHEET_NAME = "ISKCON_BOOK_INVENTORY"
 SHEET_ID = "1GKYhoxUS6XrDlrb6j5KjUzgsnIBUuYPA6Pd64r5EAxc"
@@ -13,9 +12,9 @@ scope = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-creds = ServiceAccountCredentials.from_json_keyfile_dict(
+creds = Credentials.from_service_account_info(
     st.secrets["gcp_service_account"],
-    scope
+    scopes=scope
 )
 client = gspread.authorize(creds)
 st.write("Secrets loaded:", st.secrets["gcp_service_account"]["client_email"])
