@@ -3,6 +3,10 @@ import gspread
 import pandas as pd
 from datetime import datetime
 from google.oauth2.service_account import Credentials
+import pytz
+
+tz = pytz.timezone("Asia/Kolkata")  # your timezone
+current_time = datetime.now(tz).strftime("%Y-%m-%d %H:%M:%S")
 # ---------- CONFIG ----------
 SHEET_NAME = "ISKCON_BOOK_INVENTORY"
 SHEET_ID = "1GKYhoxUS6XrDlrb6j5KjUzgsnIBUuYPA6Pd64r5EAxc"
@@ -74,7 +78,7 @@ quantity = st.number_input("Quantity Sold", min_value=1, step=1)
 # ---------- SUBMIT ----------
 if st.button("Submit Sale"):
     sales_sheet.append_row([
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        current_time,
         book_name,
         language,
         quantity,
