@@ -16,6 +16,7 @@ creds = Credentials.from_service_account_info(
     st.secrets["gcp_service_account"],
     scopes=scope
 )
+st.text("SHOWING UPDATED CODE")
 client = gspread.authorize(creds)
 st.write("Secrets loaded:", st.secrets["gcp_service_account"]["client_email"])
 # sheet = client.open(SHEET_NAME)
