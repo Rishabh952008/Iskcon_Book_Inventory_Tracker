@@ -6,7 +6,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # ---------- CONFIG ----------
 SHEET_NAME = "ISKCON_BOOK_INVENTORY"
-
+SHEET_ID = "1GKYhoxUS6XrDlrb6j5KjUzgsnIBUuYPA6Pd64r5EAxc"
 # ---------- AUTH ----------
 scope = [
     "https://spreadsheets.google.com/feeds",
@@ -19,7 +19,8 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(
 )
 client = gspread.authorize(creds)
 st.write("Secrets loaded:", st.secrets["gcp_service_account"]["client_email"])
-sheet = client.open(SHEET_NAME)
+# sheet = client.open(SHEET_NAME)
+sheet = client.open_by_key(SHEET_ID)
 sales_sheet = sheet.worksheet("sales_log")
 books_sheet = sheet.worksheet("books_master")
 
