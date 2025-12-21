@@ -58,7 +58,7 @@ book_name = st.selectbox(
 # ---------- LANGUAGE ----------
 language = st.selectbox(
     "Language",
-    ["English", "Hindi", "Marathi", "Gujarati","Tamil","Kannada","Malayalam"]
+    ["English", "Hindi", "Marathi", "Gujarati","Tamil","Kannada","Malayalam","Bengali"]
 )
 
 # ---------- PRICE AUTO ----------
