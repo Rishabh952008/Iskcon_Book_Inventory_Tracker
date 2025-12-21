@@ -58,7 +58,7 @@ book_name = st.selectbox(
 # ---------- LANGUAGE ----------
 language = st.selectbox(
     "Language",
-    ["English", "Hindi", "Marathi", "Gujarati"]
+    ["English", "Hindi", "Marathi", "Gujarati","Tamil","Kannada","Malayalam"]
 )
 
 # ---------- PRICE AUTO ----------
@@ -75,6 +75,12 @@ price = st.number_input("Price", value=price if price else 0)
 
 quantity = st.number_input("Quantity Sold", min_value=1, step=1)
 
+payment_type= st.selectbox(
+    "Payment Mode",
+    ["Cash", "Online"]
+)
+
+
 # ---------- SUBMIT ----------
 if st.button("Submit Sale"):
     sales_sheet.append_row([
@@ -83,7 +89,8 @@ if st.button("Submit Sale"):
         language,
         quantity,
         price,
-        devotee
+        devotee,
+        payment_type
     ])
     st.success("✅ Sale recorded successfully")
 
